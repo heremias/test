@@ -39,11 +39,11 @@ on:
 
 env:
   AZURE_CONTAINER_REGISTRY: "ycloud"
-  CONTAINER_NAME: "redwood-main"
-  WEB_CONTAINER_NAME: "redwood-web"
+  CONTAINER_NAME: "test-main"
+  WEB_CONTAINER_NAME: "test-web"
   RESOURCE_GROUP: "ynhd_group"
   CLUSTER_NAME: "ynhd"
-  IMAGE_PULL_SECRET_NAME: "redwoods"
+  IMAGE_PULL_SECRET_NAME: "tests"
   KUSTOMIZE_PATH: "your-kustomize-path"
 
 jobs:
@@ -112,5 +112,5 @@ jobs:
         az account set --subscription "be822816-d331-4f6b-a872-337b841fa8cc"
         az aks get-credentials -g ynhd_group -n ynhd --overwrite
         docker login ycloud.azurecr.io --username ycloud --password ${{ secrets.ACR_TOKEN }}
-        kubectl apply -f kubernetes/redwood.yaml
+        kubectl apply -f kubernetes/test.yaml
         kubectl get pod private-reg
