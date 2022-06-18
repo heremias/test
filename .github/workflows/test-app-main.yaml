@@ -88,10 +88,9 @@ jobs:
       max-parallel: 1
       fail-fast: true
       matrix:
-        platform: [api, web]
+        platform: [test]
         include:
-          - platform: api
-          - platform: web
+          - platform: test
 
     steps:
       # Checkout deployment repository
