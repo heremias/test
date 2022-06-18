@@ -1,0 +1,35 @@
+.bar {
+    background-color: darkgray; 
+    width: 100vw;
+    height: 15px; 
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-top: -8px;
+}
+.pageStyles {
+    font-family: -apple-system, Roboto, sans-serif, serif;
+    max-width: 800px;
+    color: #232129;
+    padding-top: 100px;
+    margin-bottom: 100px;
+    margin: auto;
+}
+.headingStyles {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-decoration: none;
+    color: #232129;
+    border-bottom: 1px solid #ccc;
+}
+.card {
+    border-bottom: 2px;
+    margin-bottom: 60px;
+}
+.card-text {
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 30px;
+}
+.imageStyle {
+}
