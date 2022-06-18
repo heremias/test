@@ -37,11 +37,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [api, web]
+        platform: [test]
         include:
-          - platform: api
-            DATABASE_URL: __MAIN_DATABASE_URL
-          - platform: web
+          - platform: test
 
     steps:
 
@@ -67,7 +65,7 @@ jobs:
         with:
           push: true
           context: .
-          file: ./${{ matrix.platform }}/Dockerfile
+          file: ./Dockerfile
           build-args: |
             NODE_ENV=${{ env.NODE_ENV }}
             RUNTIME_ENV=${{ env.RUNTIME_ENV }}
