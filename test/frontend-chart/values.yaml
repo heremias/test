@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/heremias/redwoodjs-app-web-main
+  repository: ghcr.io/heremias/test-app-test-main
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "75aca8fac196f5b2b6fbe7c70ce7fe654893c366"
@@ -12,7 +12,7 @@ imagePullSecrets:
 service:
   type: LoadBalancer
   port: 80
-  targetPort: 8910
+  targetPort: 8000
 
 configMap:
   name: reactconfig

@@ -114,7 +114,7 @@ jobs:
         run: |
           helm --help
           ls
-          cd web
+          cd test
           helm package frontend-chart
           helm install rw-web frontend-chart-1.16.0.tgz
 
