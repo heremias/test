@@ -39,11 +39,10 @@ on:
 
 env:
   AZURE_CONTAINER_REGISTRY: "ycloud"
-  CONTAINER_NAME: "test-main"
   WEB_CONTAINER_NAME: "test-web"
   RESOURCE_GROUP: "ynhd_group"
   CLUSTER_NAME: "ynhd"
-  IMAGE_PULL_SECRET_NAME: "tests"
+  IMAGE_PULL_SECRET_NAME: "redwoods"
   KUSTOMIZE_PATH: "your-kustomize-path"
 
 jobs:
@@ -70,8 +69,7 @@ jobs:
     # Builds and pushes an image up to your Azure Container Registry
     - name: Build and push image to ACR
       run: |
-        az acr build -f api/Dockerfile --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
-        az acr build -f web/Dockerfile --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.WEB_CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
+        az acr build -f test/Dockerfile --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
 
   createSecret:
     permissions:
