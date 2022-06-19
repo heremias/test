@@ -32,4 +32,4 @@ COPY web/config/nginx/default.conf /etc/nginx/conf.d/default.conf
 # Copy static assets from builder stage
 COPY --from=builder /app/test/public .
 # Containers run nginx with global directives and daemon off
-EXPOSE 80
+EXPOSE 8080

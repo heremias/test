@@ -18,7 +18,7 @@ spec:
       - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         name: {{ .Chart.Name }}
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: rw-test
         env:
         - name: REACT_APP_EMPLOYEE_API_BASE_URL
