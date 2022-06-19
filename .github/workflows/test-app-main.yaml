@@ -20,7 +20,7 @@ env:
   CONTAINER_REGISTRY_IMAGE_PREFIX: test-app
 
   # Repository
-  GIT_DEPLOY_REPOSITORY_NAME: heremias/test-on-kubernetes
+  GIT_DEPLOY_REPOSITORY_NAME: heremias/test
   GIT_DEPLOY_REPOSITORY_BRANCH: main
   GIT_DEPLOY_REPOSITORY_AUTHOR_NAME: heremias
   GIT_DEPLOY_REPOSITORY_AUTHOR_EMAIL: heremias@users.noreply.github.com
