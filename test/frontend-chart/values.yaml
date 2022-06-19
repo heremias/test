@@ -4,7 +4,7 @@ image:
   repository: ghcr.io/heremias/test-app-test-main
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "8a34c8f1a380f696408f28e219933f16531d5207"
+  tag: "cc0e92dc5fde33b38e9e424c1b668b5833ff807c"
 
 imagePullSecrets:
   - name: redwoods
@@ -12,7 +12,7 @@ imagePullSecrets:
 service:
   type: LoadBalancer
   port: 80
-  targetPort: 8080
+  targetPort: 80
 
 configMap:
   name: reactconfig
