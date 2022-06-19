@@ -23,7 +23,7 @@ RUN npm run build
 # CMD [ "npm", "run", "develop" ]
 
 
-FROM nginx:alpine
+FROM nginx:alpine as runner
 # Set working directory to nginx asset directory
 WORKDIR /usr/share/nginx/html
 # Remove default nginx static assets
@@ -31,4 +31,4 @@ RUN rm -rf ./*
 # Copy static assets from builder stage
 COPY --from=builder /app/test/public .
 # Containers run nginx with global directives and daemon off
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+EXPOSE 8080

@@ -1,0 +1,1264 @@
+### Type definitions saved at 2022-06-19T04:17:14.732Z ###
+
+enum RemoteFileFit {
+  COVER
+  FILL
+  OUTSIDE
+  CONTAIN
+}
+
+enum RemoteFileFormat {
+  AUTO
+  JPG
+  PNG
+  WEBP
+  AVIF
+}
+
+enum RemoteFileLayout {
+  FIXED
+  FULL_WIDTH
+  CONSTRAINED
+}
+
+enum RemoteFilePlaceholder {
+  DOMINANT_COLOR
+  BLURRED
+  TRACED_SVG
+  NONE
+}
+
+enum RemoteFileCropFocus {
+  CENTER
+  TOP
+  RIGHT
+  BOTTOM
+  LEFT
+  ENTROPY
+  EDGES
+  FACES
+}
+
+type RemoteFileResize {
+  width: Int
+  height: Int
+  src: String
+}
+
+"""Remote Interface"""
+interface RemoteFile {
+  id: ID!
+  mimeType: String!
+  filename: String!
+  filesize: Int
+  width: Int
+  height: Int
+  publicUrl: String!
+  resize(
+    width: Int
+    height: Int
+    aspectRatio: Float
+    fit: RemoteFileFit = COVER
+
+    """
+    
+    The image formats to generate. Valid values are AUTO (meaning the same
+    format as the source image), JPG, PNG, WEBP and AVIF.
+    The default value is [AUTO, WEBP, AVIF], and you should rarely need to
+    change this. Take care if you specify JPG or PNG when you do
+    not know the formats of the source images, as this could lead to unwanted
+    results such as converting JPEGs to PNGs. Specifying
+    both PNG and JPG is not supported and will be ignored.
+    """
+    format: RemoteFileFormat = AUTO
+    cropFocus: [RemoteFileCropFocus]
+    quality: Int = 75
+  ): RemoteFileResize
+
+  """
+  Data used in the <GatsbyImage /> component. See https://gatsby.dev/img for more info.
+  """
+  gatsbyImage(
+    """
+    
+    The layout for the image.
+    FIXED: A static image sized, that does not resize according to the screen width
+    FULL_WIDTH: The image resizes to fit its container. Pass a "sizes" option if
+    it isn't going to be the full width of the screen.
+    CONSTRAINED: Resizes to fit its container, up to a maximum width, at which point it will remain fixed in size.
+    
+    """
+    layout: RemoteFileLayout = CONSTRAINED
+
+    """
+    
+    The display width of the generated image for layout = FIXED, and the display
+    width of the largest image for layout = CONSTRAINED.
+    The actual largest image resolution will be this value multiplied by the largest value in outputPixelDensities
+    Ignored if layout = FLUID.
+    
+    """
+    width: Int
+
+    """
+    
+    If set, the height of the generated image. If omitted, it is calculated from
+    the supplied width, matching the aspect ratio of the source image.
+    """
+    height: Int
+
+    """
+    
+    Format of generated placeholder image, displayed while the main image loads.
+    BLURRED: a blurred, low resolution image, encoded as a base64 data URI (default)
+    DOMINANT_COLOR: a solid color, calculated from the dominant color of the image.
+    TRACED_SVG: a low-resolution traced SVG of the image.
+    NONE: no placeholder. Set the argument "backgroundColor" to use a fixed background color.
+    """
+    placeholder: RemoteFilePlaceholder = DOMINANT_COLOR
+
+    """
+    
+    If set along with width or height, this will set the value of the other
+    dimension to match the provided aspect ratio, cropping the image if needed.
+    If neither width or height is provided, height will be set based on the intrinsic width of the source image.
+    
+    """
+    aspectRatio: Float
+
+    """
+    
+    The image formats to generate. Valid values are AUTO (meaning the same
+    format as the source image), JPG, PNG, WEBP and AVIF.
+    The default value is [AUTO, WEBP, AVIF], and you should rarely need to
+    change this. Take care if you specify JPG or PNG when you do
+    not know the formats of the source images, as this could lead to unwanted
+    results such as converting JPEGs to PNGs. Specifying
+    both PNG and JPG is not supported and will be ignored.
+    
+    """
+    formats: [RemoteFileFormat!] = [AUTO, WEBP, AVIF]
+
+    """
+    
+    A list of image pixel densities to generate for FIXED and CONSTRAINED
+    images. You should rarely need to change this. It will never generate images
+    larger than the source, and will always include a 1x image.
+    Default is [ 1, 2 ] for fixed images, meaning 1x, 2x, and [0.25, 0.5, 1, 2]
+    for fluid. In this case, an image with a fluid layout and width = 400 would
+    generate images at 100, 200, 400 and 800px wide.
+    
+    """
+    outputPixelDensities: [Float] = [0.25, 0.5, 1, 2]
+
+    """
+    
+    Specifies the image widths to generate. You should rarely need to change
+    this. For FIXED and CONSTRAINED images it is better to allow these to be
+    determined automatically,
+    based on the image size. For FULL_WIDTH images this can be used to override
+    the default, which is [750, 1080, 1366, 1920].
+    It will never generate any images larger than the source.
+    
+    """
+    breakpoints: [Int] = [750, 1080, 1366, 1920]
+
+    """
+    
+    The "sizes" property, passed to the img tag. This describes the display size of the image.
+    This does not affect the generated images, but is used by the browser to
+    decide which images to download. You can leave this blank for fixed images,
+    or if the responsive image
+    container will be the full width of the screen. In these cases we will generate an appropriate value.
+    
+    """
+    sizes: String
+
+    """
+    Background color applied to the wrapper, or when "letterboxing" an image to another aspect ratio.
+    """
+    backgroundColor: String
+    fit: RemoteFileFit = COVER
+    cropFocus: [RemoteFileCropFocus]
+    quality: Int = 75
+  ): GatsbyImageData
+}
+
+type File implements Node @dontInfer {
+  sourceInstanceName: String!
+  absolutePath: String!
+  relativePath: String!
+  extension: String!
+  size: Int!
+  prettySize: String!
+  modifiedTime: Date! @dateformat
+  accessTime: Date! @dateformat
+  changeTime: Date! @dateformat
+  birthTime: Date! @dateformat
+  root: String!
+  dir: String!
+  base: String!
+  ext: String!
+  name: String!
+  relativeDirectory: String!
+  dev: Int!
+  mode: Int!
+  nlink: Int!
+  uid: Int!
+  gid: Int!
+  rdev: Int!
+  ino: Float!
+  atimeMs: Float!
+  mtimeMs: Float!
+  ctimeMs: Float!
+  atime: Date! @dateformat
+  mtime: Date! @dateformat
+  ctime: Date! @dateformat
+  birthtime: Date @deprecated(reason: "Use `birthTime` instead")
+  birthtimeMs: Float @deprecated(reason: "Use `birthTime` instead")
+  blksize: Int
+  blocks: Int
+  url: String
+}
+
+type Directory implements Node @dontInfer {
+  sourceInstanceName: String!
+  absolutePath: String!
+  relativePath: String!
+  extension: String!
+  size: Int!
+  prettySize: String!
+  modifiedTime: Date! @dateformat
+  accessTime: Date! @dateformat
+  changeTime: Date! @dateformat
+  birthTime: Date! @dateformat
+  root: String!
+  dir: String!
+  base: String!
+  ext: String!
+  name: String!
+  relativeDirectory: String!
+  dev: Int!
+  mode: Int!
+  nlink: Int!
+  uid: Int!
+  gid: Int!
+  rdev: Int!
+  ino: Float!
+  atimeMs: Float!
+  mtimeMs: Float!
+  ctimeMs: Float!
+  atime: Date! @dateformat
+  mtime: Date! @dateformat
+  ctime: Date! @dateformat
+  birthtime: Date @deprecated(reason: "Use `birthTime` instead")
+  birthtimeMs: Float @deprecated(reason: "Use `birthTime` instead")
+}
+
+type Site implements Node @dontInfer {
+  buildTime: Date @dateformat
+  siteMetadata: SiteSiteMetadata
+  polyfill: Boolean
+  pathPrefix: String
+  jsxRuntime: String
+  trailingSlash: String
+  graphqlTypegen: Boolean
+}
+
+type SiteSiteMetadata {
+  title: String
+  description: String
+  author: String
+  url: String
+  keywords: [String]
+  image: String
+}
+
+type SiteFunction implements Node @dontInfer {
+  functionRoute: String!
+  pluginName: String!
+  originalAbsoluteFilePath: String!
+  originalRelativeFilePath: String!
+  relativeCompiledFilePath: String!
+  absoluteCompiledFilePath: String!
+  matchPath: String
+}
+
+type SitePage implements Node @dontInfer {
+  path: String!
+  component: String!
+  internalComponentName: String!
+  componentChunkName: String!
+  matchPath: String
+  pageContext: JSON @proxy(from: "context", fromNode: false)
+  pluginCreator: SitePlugin @link(by: "id", from: "pluginCreatorId")
+}
+
+type SitePlugin implements Node @dontInfer {
+  resolve: String
+  name: String
+  version: String
+  nodeAPIs: [String]
+  browserAPIs: [String]
+  ssrAPIs: [String]
+  pluginFilepath: String
+  pluginOptions: JSON
+  packageJson: JSON
+}
+
+type SiteBuildMetadata implements Node @dontInfer {
+  buildTime: Date @dateformat
+}
+
+type user__user implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  display_name: String
+  relationships: user__userRelationships
+}
+
+type taxonomy_term__tags implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__tid: Int
+  drupal_internal__revision_id: Int
+  langcode: String
+  revision_created: Date @dateformat
+  status: Boolean
+  name: String
+  weight: Int
+  changed: Date @dateformat
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: taxonomy_term__tagsPath
+  relationships: taxonomy_term__tagsRelationships
+  vid: taxonomy_term__tagsVid
+}
+
+type taxonomy_term__product implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__tid: Int
+  drupal_internal__revision_id: Int
+  langcode: String
+  revision_created: Date @dateformat
+  status: Boolean
+  name: String
+  weight: Int
+  changed: Date @dateformat
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: taxonomy_term__productPath
+  relationships: taxonomy_term__productRelationships
+  vid: taxonomy_term__productVid
+}
+
+type taxonomy_term__medium implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__tid: Int
+  drupal_internal__revision_id: Int
+  langcode: String
+  revision_created: Date @dateformat
+  status: Boolean
+  name: String
+  weight: Int
+  changed: Date @dateformat
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: taxonomy_term__mediumPath
+  relationships: taxonomy_term__mediumRelationships
+  vid: taxonomy_term__mediumVid
+}
+
+type taxonomy_term__forums implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__tid: Int
+  drupal_internal__revision_id: Int
+  langcode: String
+  revision_created: Date @dateformat
+  status: Boolean
+  name: String
+  weight: Int
+  changed: Date @dateformat
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: taxonomy_term__forumsPath
+  forum_container: Boolean
+  vid: taxonomy_term__forumsVid
+}
+
+type search_page__search_page implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  langcode: String
+  status: Boolean
+  dependencies: search_page__search_pageDependencies
+  drupal_internal__id: String
+  label: String
+  path: String
+  weight: Int
+  plugin: String
+}
+
+type profile__customer implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__profile_id: Int
+  drupal_internal__revision_id: Int
+  revision_created: Date @dateformat
+  status: Boolean
+  is_default: Boolean
+  data: profile__customerData
+  created: Date @dateformat
+  changed: Date @dateformat
+  address: profile__customerAddress
+  relationships: profile__customerRelationships
+  profile_type: profile__customerProfile_type
+  revision_user: profile__customerRevision_user
+  uid: profile__customerUid
+}
+
+type node_type__node_type implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  langcode: String
+  status: Boolean
+  dependencies: node_type__node_typeDependencies
+  name: String
+  drupal_internal__type: String
+  description: String
+  help: String
+  new_revision: Boolean
+  preview_mode: Int
+  display_submitted: Boolean
+  relationships: node_type__node_typeRelationships
+  third_party_settings: node_type__node_typeThird_party_settings
+}
+
+type node__products implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__nid: Int
+  drupal_internal__vid: Int
+  langcode: String
+  revision_timestamp: Date @dateformat
+  status: Boolean
+  title: String
+  created: Date @dateformat
+  changed: Date @dateformat
+  promote: Boolean
+  sticky: Boolean
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: node__productsPath
+  body: node__productsBody
+  field_cost: String
+  field_count: Int
+  field_weight: String
+  relationships: node__productsRelationships
+  node_type: node__productsNode_type
+  revision_uid: node__productsRevision_uid
+  uid: node__productsUid
+  field_product_media: [node__productsField_product_media]
+  field_type: node__productsField_type
+}
+
+type node__page implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__nid: Int
+  drupal_internal__vid: Int
+  langcode: String
+  revision_timestamp: Date @dateformat
+  status: Boolean
+  title: String
+  created: Date @dateformat
+  changed: Date @dateformat
+  promote: Boolean
+  sticky: Boolean
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: node__pagePath
+  body: node__pageBody
+  relationships: node__pageRelationships
+  node_type: node__pageNode_type
+  revision_uid: node__pageRevision_uid
+  uid: node__pageUid
+}
+
+type node__homepage implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__nid: Int
+  drupal_internal__vid: Int
+  langcode: String
+  revision_timestamp: Date @dateformat
+  status: Boolean
+  title: String
+  created: Date @dateformat
+  changed: Date @dateformat
+  promote: Boolean
+  sticky: Boolean
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: node__homepagePath
+  body: node__homepageBody
+  relationships: node__homepageRelationships
+  node_type: node__homepageNode_type
+  revision_uid: node__homepageRevision_uid
+  uid: node__homepageUid
+}
+
+type node__gallery implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__nid: Int
+  drupal_internal__vid: Int
+  langcode: String
+  revision_timestamp: Date @dateformat
+  status: Boolean
+  title: String
+  created: Date @dateformat
+  changed: Date @dateformat
+  promote: Boolean
+  sticky: Boolean
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: node__galleryPath
+  body: node__galleryBody
+  relationships: node__galleryRelationships
+  node_type: node__galleryNode_type
+  revision_uid: node__galleryRevision_uid
+  uid: node__galleryUid
+}
+
+type node__entry implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__nid: Int
+  drupal_internal__vid: Int
+  langcode: String
+  revision_timestamp: Date @dateformat
+  status: Boolean
+  title: String
+  created: Date @dateformat
+  changed: Date @dateformat
+  promote: Boolean
+  sticky: Boolean
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: node__entryPath
+  body: node__entryBody
+  relationships: node__entryRelationships
+  node_type: node__entryNode_type
+  revision_uid: node__entryRevision_uid
+  uid: node__entryUid
+  field_artist: node__entryField_artist
+  field_image: node__entryField_image
+  field_medium: [node__entryField_medium]
+  field_tags: [node__entryField_tags]
+}
+
+type node__article implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__nid: Int
+  drupal_internal__vid: Int
+  langcode: String
+  revision_timestamp: Date @dateformat
+  status: Boolean
+  title: String
+  created: Date @dateformat
+  changed: Date @dateformat
+  promote: Boolean
+  sticky: Boolean
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: node__articlePath
+  body: node__articleBody
+  comment: node__articleComment
+  relationships: node__articleRelationships
+  node_type: node__articleNode_type
+  revision_uid: node__articleRevision_uid
+  uid: node__articleUid
+  field_image: node__articleField_image
+  field_stl: node__articleField_stl
+}
+
+type menu__menu implements Node @dontInfer {
+  drupal_id: String
+  label: String
+}
+
+type media_type__media_type implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  label: String
+  relationships: media_type__media_typeRelationships
+}
+
+type media__image implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__mid: Int
+  drupal_internal__vid: Int
+  langcode: String
+  revision_created: Date @dateformat
+  status: Boolean
+  name: String
+  created: Date @dateformat
+  changed: Date @dateformat
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  path: media__imagePath
+  relationships: media__imageRelationships
+  bundle: media__imageBundle
+  uid: media__imageUid
+  thumbnail: media__imageThumbnail
+  field_media_image: media__imageField_media_image
+}
+
+type file__file implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__fid: Int
+  langcode: String
+  filename: String
+  uri: file__fileUri
+  filemime: String
+  filesize: Int
+  status: Boolean
+  created: Date @dateformat
+  changed: Date @dateformat
+  relationships: file__fileRelationships
+  uid: file__fileUid
+  localFile: File @link(by: "id", from: "localFile___NODE")
+}
+
+type date_format__date_format implements Node @dontInfer {
+  drupal_id: String
+  label: String
+}
+
+type commerce_product_variation__default implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__variation_id: Int
+  langcode: String
+  status: Boolean
+  sku: String
+  title: String
+  price: commerce_product_variation__defaultPrice
+  created: Date @dateformat
+  changed: Date @dateformat
+  default_langcode: Boolean
+  dimensions: commerce_product_variation__defaultDimensions
+  weight: commerce_product_variation__defaultWeight
+  relationships: commerce_product_variation__defaultRelationships
+  commerce_product_variation_type: commerce_product_variation__defaultCommerce_product_variation_type
+  uid: commerce_product_variation__defaultUid
+  product_id: commerce_product_variation__defaultProduct_id
+}
+
+type commerce_product_type__commerce_product_type implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  label: String
+  relationships: commerce_product_type__commerce_product_typeRelationships
+}
+
+type commerce_product__default implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__product_id: Int
+  langcode: String
+  status: Boolean
+  title: String
+  path: commerce_product__defaultPath
+  created: Date @dateformat
+  changed: Date @dateformat
+  default_langcode: Boolean
+  relationships: commerce_product__defaultRelationships
+  commerce_product_type: commerce_product__defaultCommerce_product_type
+  uid: commerce_product__defaultUid
+  stores: [commerce_product__defaultStores]
+  variations: [commerce_product__defaultVariations]
+  default_variation: commerce_product__defaultDefault_variation
+}
+
+type block_content__reusable_block implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  drupal_internal__id: Int
+  drupal_internal__revision_id: Int
+  langcode: String
+  revision_created: Date @dateformat
+  status: Boolean
+  info: String
+  changed: Date @dateformat
+  reusable: Boolean
+  default_langcode: Boolean
+  revision_translation_affected: Boolean
+  body: block_content__reusable_blockBody
+  block_content_type: block_content__reusable_blockBlock_content_type
+}
+
+type block__block implements Node @derivedTypes @dontInfer {
+  drupal_id: String
+  langcode: String
+  status: Boolean
+  dependencies: block__blockDependencies
+  drupal_internal__id: String
+  theme: String
+  region: String
+  weight: Int
+  plugin: String
+  settings: block__blockSettings
+  visibility: block__blockVisibility
+}
+
+type user__userRelationships {
+  profile__customer: [profile__customer] @link(by: "id", from: "profile__customer___NODE")
+  file__file: [file__file] @link(by: "id", from: "file__file___NODE")
+  node__entry: [node__entry] @link(by: "id", from: "node__entry___NODE")
+  commerce_product__default: [commerce_product__default] @link(by: "id", from: "commerce_product__default___NODE")
+  commerce_product_variation__default: [commerce_product_variation__default] @link(by: "id", from: "commerce_product_variation__default___NODE")
+  media__image: [media__image] @link(by: "id", from: "media__image___NODE")
+  node__article: [node__article] @link(by: "id", from: "node__article___NODE")
+  node__gallery: [node__gallery] @link(by: "id", from: "node__gallery___NODE")
+  node__homepage: [node__homepage] @link(by: "id", from: "node__homepage___NODE")
+  node__page: [node__page] @link(by: "id", from: "node__page___NODE")
+  node__products: [node__products] @link(by: "id", from: "node__products___NODE")
+}
+
+type taxonomy_term__tagsPath {
+  langcode: String
+}
+
+type taxonomy_term__tagsRelationships {
+  node__entry: [node__entry] @link(by: "id", from: "node__entry___NODE")
+}
+
+type taxonomy_term__tagsVid {
+  drupal_internal__target_id: String
+}
+
+type taxonomy_term__productPath {
+  langcode: String
+}
+
+type taxonomy_term__productRelationships {
+  node__products: [node__products] @link(by: "id", from: "node__products___NODE")
+}
+
+type taxonomy_term__productVid {
+  drupal_internal__target_id: String
+}
+
+type taxonomy_term__mediumPath {
+  langcode: String
+}
+
+type taxonomy_term__mediumRelationships {
+  node__entry: [node__entry] @link(by: "id", from: "node__entry___NODE")
+}
+
+type taxonomy_term__mediumVid {
+  drupal_internal__target_id: String
+}
+
+type taxonomy_term__forumsPath {
+  langcode: String
+}
+
+type taxonomy_term__forumsVid {
+  drupal_internal__target_id: String
+}
+
+type search_page__search_pageDependencies {
+  module: [String]
+}
+
+type profile__customerData {
+  address_book_profile_id: String
+}
+
+type profile__customerAddress {
+  country_code: String
+  administrative_area: String
+  locality: String
+  postal_code: String
+  address_line1: String
+  address_line2: String
+  organization: String
+  given_name: String
+  family_name: String
+}
+
+type profile__customerRelationships {
+  revision_user: user__user @link(by: "id", from: "revision_user___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+}
+
+type profile__customerProfile_type {
+  drupal_internal__target_id: String
+}
+
+type profile__customerRevision_user {
+  drupal_internal__target_id: Int
+}
+
+type profile__customerUid {
+  drupal_internal__target_id: Int
+}
+
+type node_type__node_typeDependencies @derivedTypes {
+  enforced: node_type__node_typeDependenciesEnforced
+  module: [String]
+}
+
+type node_type__node_typeDependenciesEnforced {
+  module: [String]
+}
+
+type node_type__node_typeRelationships {
+  node__article: [node__article] @link(by: "id", from: "node__article___NODE")
+  node__products: [node__products] @link(by: "id", from: "node__products___NODE")
+  node__page: [node__page] @link(by: "id", from: "node__page___NODE")
+  node__entry: [node__entry] @link(by: "id", from: "node__entry___NODE")
+  node__gallery: [node__gallery] @link(by: "id", from: "node__gallery___NODE")
+  node__homepage: [node__homepage] @link(by: "id", from: "node__homepage___NODE")
+}
+
+type node_type__node_typeThird_party_settings @derivedTypes {
+  menu_ui: node_type__node_typeThird_party_settingsMenu_ui
+}
+
+type node_type__node_typeThird_party_settingsMenu_ui {
+  available_menus: [String]
+  parent: String
+}
+
+type node__productsPath {
+  langcode: String
+}
+
+type node__productsBody {
+  value: String
+  format: String
+  processed: String
+  summary: String
+}
+
+type node__productsRelationships {
+  node_type: node_type__node_type @link(by: "id", from: "node_type___NODE")
+  revision_uid: user__user @link(by: "id", from: "revision_uid___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+  field_product_media: [media__image] @link(by: "id", from: "field_product_media___NODE")
+  field_type: taxonomy_term__product @link(by: "id", from: "field_type___NODE")
+}
+
+type node__productsNode_type {
+  drupal_internal__target_id: String
+}
+
+type node__productsRevision_uid {
+  drupal_internal__target_id: Int
+}
+
+type node__productsUid {
+  drupal_internal__target_id: Int
+}
+
+type node__productsField_product_media {
+  drupal_internal__target_id: Int
+}
+
+type node__productsField_type {
+  drupal_internal__target_id: Int
+}
+
+type node__pagePath {
+  alias: String
+  pid: Int
+  langcode: String
+}
+
+type node__pageBody {
+  value: String
+  format: String
+  processed: String
+  summary: String
+}
+
+type node__pageRelationships {
+  node_type: node_type__node_type @link(by: "id", from: "node_type___NODE")
+  revision_uid: user__user @link(by: "id", from: "revision_uid___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+}
+
+type node__pageNode_type {
+  drupal_internal__target_id: String
+}
+
+type node__pageRevision_uid {
+  drupal_internal__target_id: Int
+}
+
+type node__pageUid {
+  drupal_internal__target_id: Int
+}
+
+type node__homepagePath {
+  langcode: String
+}
+
+type node__homepageBody {
+  value: String
+  format: String
+  processed: String
+  summary: String
+}
+
+type node__homepageRelationships {
+  node_type: node_type__node_type @link(by: "id", from: "node_type___NODE")
+  revision_uid: user__user @link(by: "id", from: "revision_uid___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+}
+
+type node__homepageNode_type {
+  drupal_internal__target_id: String
+}
+
+type node__homepageRevision_uid {
+  drupal_internal__target_id: Int
+}
+
+type node__homepageUid {
+  drupal_internal__target_id: Int
+}
+
+type node__galleryPath {
+  langcode: String
+}
+
+type node__galleryBody {
+  value: String
+  format: String
+  processed: String
+  summary: String
+}
+
+type node__galleryRelationships {
+  node_type: node_type__node_type @link(by: "id", from: "node_type___NODE")
+  revision_uid: user__user @link(by: "id", from: "revision_uid___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+}
+
+type node__galleryNode_type {
+  drupal_internal__target_id: String
+}
+
+type node__galleryRevision_uid {
+  drupal_internal__target_id: Int
+}
+
+type node__galleryUid {
+  drupal_internal__target_id: Int
+}
+
+type node__entryPath {
+  alias: String
+  pid: Int
+  langcode: String
+}
+
+type node__entryBody {
+  value: String
+  format: String
+  processed: String
+  summary: String
+}
+
+type node__entryRelationships {
+  node_type: node_type__node_type @link(by: "id", from: "node_type___NODE")
+  revision_uid: user__user @link(by: "id", from: "revision_uid___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+  field_artist: user__user @link(by: "id", from: "field_artist___NODE")
+  field_image: file__file @link(by: "id", from: "field_image___NODE")
+  field_medium: [taxonomy_term__medium] @link(by: "id", from: "field_medium___NODE")
+  field_tags: [taxonomy_term__tags] @link(by: "id", from: "field_tags___NODE")
+}
+
+type node__entryNode_type {
+  drupal_internal__target_id: String
+}
+
+type node__entryRevision_uid {
+  drupal_internal__target_id: Int
+}
+
+type node__entryUid {
+  drupal_internal__target_id: Int
+}
+
+type node__entryField_artist {
+  drupal_internal__target_id: Int
+}
+
+type node__entryField_image {
+  alt: String
+  title: String
+  width: Int
+  height: Int
+  drupal_internal__target_id: Int
+}
+
+type node__entryField_medium {
+  drupal_internal__target_id: Int
+}
+
+type node__entryField_tags {
+  drupal_internal__target_id: Int
+}
+
+type node__articlePath {
+  alias: String
+  pid: Int
+  langcode: String
+}
+
+type node__articleBody {
+  value: String
+  format: String
+  processed: String
+  summary: String
+}
+
+type node__articleComment {
+  status: Int
+  cid: Int
+  last_comment_timestamp: Int
+  last_comment_uid: Int
+  comment_count: Int
+}
+
+type node__articleRelationships {
+  node_type: node_type__node_type @link(by: "id", from: "node_type___NODE")
+  revision_uid: user__user @link(by: "id", from: "revision_uid___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+  field_image: file__file @link(by: "id", from: "field_image___NODE")
+  field_stl: file__file @link(by: "id", from: "field_stl___NODE")
+}
+
+type node__articleNode_type {
+  drupal_internal__target_id: String
+}
+
+type node__articleRevision_uid {
+  drupal_internal__target_id: Int
+}
+
+type node__articleUid {
+  drupal_internal__target_id: Int
+}
+
+type node__articleField_image {
+  alt: String
+  title: String
+  width: Int
+  height: Int
+  drupal_internal__target_id: Int
+}
+
+type node__articleField_stl {
+  display: Boolean
+  description: String
+  drupal_internal__target_id: Int
+}
+
+type media_type__media_typeRelationships {
+  media__image: [media__image] @link(by: "id", from: "media__image___NODE")
+}
+
+type media__imagePath {
+  langcode: String
+}
+
+type media__imageRelationships {
+  bundle: media_type__media_type @link(by: "id", from: "bundle___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+  thumbnail: file__file @link(by: "id", from: "thumbnail___NODE")
+  field_media_image: file__file @link(by: "id", from: "field_media_image___NODE")
+  node__products: [node__products] @link(by: "id", from: "node__products___NODE")
+}
+
+type media__imageBundle {
+  drupal_internal__target_id: String
+}
+
+type media__imageUid @derivedTypes {
+  drupal_internal__target_id: Int
+  links: media__imageUidLinks
+}
+
+type media__imageUidLinks @derivedTypes {
+  help: media__imageUidLinksHelp
+}
+
+type media__imageUidLinksHelp @derivedTypes {
+  href: String
+  meta: media__imageUidLinksHelpMeta
+}
+
+type media__imageUidLinksHelpMeta {
+  about: String
+}
+
+type media__imageThumbnail {
+  alt: String
+  width: Int
+  height: Int
+  drupal_internal__target_id: Int
+}
+
+type media__imageField_media_image {
+  alt: String
+  title: String
+  width: Int
+  height: Int
+  drupal_internal__target_id: Int
+}
+
+type file__fileUri {
+  value: String
+  url: String
+}
+
+type file__fileRelationships {
+  uid: user__user @link(by: "id", from: "uid___NODE")
+  media__image: [media__image] @link(by: "id", from: "media__image___NODE")
+  node__article: [node__article] @link(by: "id", from: "node__article___NODE")
+  node__entry: [node__entry] @link(by: "id", from: "node__entry___NODE")
+}
+
+type file__fileUid @derivedTypes {
+  drupal_internal__target_id: Int
+  links: file__fileUidLinks
+}
+
+type file__fileUidLinks @derivedTypes {
+  help: file__fileUidLinksHelp
+}
+
+type file__fileUidLinksHelp @derivedTypes {
+  href: String
+  meta: file__fileUidLinksHelpMeta
+}
+
+type file__fileUidLinksHelpMeta {
+  about: String
+}
+
+type commerce_product_variation__defaultPrice {
+  number: String
+  currency_code: String
+  formatted: String
+}
+
+type commerce_product_variation__defaultDimensions {
+  length: String
+  width: String
+  height: String
+  unit: String
+}
+
+type commerce_product_variation__defaultWeight {
+  number: String
+  unit: String
+}
+
+type commerce_product_variation__defaultRelationships {
+  uid: user__user @link(by: "id", from: "uid___NODE")
+  product_id: commerce_product__default @link(by: "id", from: "product_id___NODE")
+  commerce_product__default: [commerce_product__default] @link(by: "id", from: "commerce_product__default___NODE")
+}
+
+type commerce_product_variation__defaultCommerce_product_variation_type {
+  drupal_internal__target_id: String
+}
+
+type commerce_product_variation__defaultUid {
+  drupal_internal__target_id: Int
+}
+
+type commerce_product_variation__defaultProduct_id {
+  drupal_internal__target_id: Int
+}
+
+type commerce_product_type__commerce_product_typeRelationships {
+  commerce_product__default: [commerce_product__default] @link(by: "id", from: "commerce_product__default___NODE")
+}
+
+type commerce_product__defaultPath {
+  langcode: String
+}
+
+type commerce_product__defaultRelationships {
+  commerce_product_type: commerce_product_type__commerce_product_type @link(by: "id", from: "commerce_product_type___NODE")
+  uid: user__user @link(by: "id", from: "uid___NODE")
+  variations: [commerce_product_variation__default] @link(by: "id", from: "variations___NODE")
+  default_variation: commerce_product_variation__default @link(by: "id", from: "default_variation___NODE")
+  commerce_product_variation__default: [commerce_product_variation__default] @link(by: "id", from: "commerce_product_variation__default___NODE")
+}
+
+type commerce_product__defaultCommerce_product_type {
+  drupal_internal__target_id: String
+}
+
+type commerce_product__defaultUid {
+  drupal_internal__target_id: Int
+}
+
+type commerce_product__defaultStores {
+  drupal_internal__target_id: Int
+}
+
+type commerce_product__defaultVariations {
+  drupal_internal__target_id: Int
+}
+
+type commerce_product__defaultDefault_variation {
+  drupal_internal__target_id: Int
+}
+
+type block_content__reusable_blockBody {
+  value: String
+  format: String
+  processed: String
+  summary: String
+}
+
+type block_content__reusable_blockBlock_content_type {
+  drupal_internal__target_id: String
+}
+
+type block__blockDependencies {
+  theme: [String]
+  module: [String]
+  config: [String]
+  content: [String]
+}
+
+type block__blockSettings {
+  id: String
+  label: String
+  label_display: String
+  provider: String
+  page_id: String
+  primary: Boolean
+  secondary: Boolean
+  level: Int
+  depth: Int
+  expand_all_items: Boolean
+  use_site_logo: Boolean
+  use_site_name: Boolean
+  use_site_slogan: Boolean
+  status: Boolean
+  info: String
+  view_mode: String
+  block_mode: String
+  dropdown: Boolean
+  block_count: Int
+}
+
+type block__blockVisibility @derivedTypes {
+  request_path: block__blockVisibilityRequest_path
+}
+
+type block__blockVisibilityRequest_path {
+  id: String
+  negate: Boolean
+  pages: String
+}
