@@ -11,8 +11,8 @@ imagePullSecrets:
 
 service:
   type: LoadBalancer
-  port: 80
-  targetPort: 8000
+  port: 8080
+  targetPort: 80
 
 configMap:
   name: reactconfig
