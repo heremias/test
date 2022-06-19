@@ -31,5 +31,6 @@ RUN rm -rf ./*
 COPY web/config/nginx/default.conf /etc/nginx/conf.d/default.conf
 # Copy static assets from builder stage
 COPY --from=builder /app/test/public .
+RUN ls -lA /usr/share/nginx/html
 # Containers run nginx with global directives and daemon off
-EXPOSE 8080
+EXPOSE 8000
