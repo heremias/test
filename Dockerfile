@@ -33,6 +33,4 @@ COPY web/config/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/test/public .
 RUN ls -lA /usr/share/nginx/html
 # Containers run nginx with global directives and daemon off
-EXPOSE 8080
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]

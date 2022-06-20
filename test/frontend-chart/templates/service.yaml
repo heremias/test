@@ -5,11 +5,14 @@ metadata:
     {{- include "frontend-chart.labels" . | nindent 4 }}
   name: {{ include "frontend-chart.fullname" . }}
 spec:
-  ports:
-  - name: react-port
-    port: {{ .Values.service.port }}
-    protocol: TCP
-    targetPort: {{ .Values.service.targetPort }}
+  - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http-alt
   selector:
     {{- include "frontend-chart.selectorLabels" . | nindent 4 }}
   type: {{ .Values.service.type }}
