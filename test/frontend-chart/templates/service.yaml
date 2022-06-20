@@ -5,7 +5,8 @@ metadata:
     {{- include "frontend-chart.labels" . | nindent 4 }}
   name: {{ include "frontend-chart.fullname" . }}
 spec:
-  - port: 80
+  ports:
+    - port: 80
       targetPort: 80
       protocol: TCP
       name: http

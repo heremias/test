@@ -4,7 +4,7 @@ image:
   repository: ghcr.io/heremias/test-app-test-main
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "ea87740d5bcec8c66e64e82228f8dfd2492bc32e"
+  tag: "c1f9bee77f2bc86a00153f292b0268c4e0f94c6e"
 
 imagePullSecrets:
   - name: redwoods

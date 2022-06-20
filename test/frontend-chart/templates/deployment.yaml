@@ -18,20 +18,9 @@ spec:
       - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         name: {{ .Chart.Name }}
         ports:
-        - name: http
-            containerPort: 80
-        - name: http-alt
-          containerPort: 8080
-        env:
-        - name: REACT_APP_EMPLOYEE_API_BASE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: reactconfig
-              key: EMPLOYEE_API_BASE_URL_VALUE
-        - name: REACT_APP_SKILL_API_BASE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: reactconfig
-              key: SKILL_API_BASE_URL_VALUE
+        - containerPort: 80
+          name: http
+        - containerPort: 8080
+          name: http-alt
       imagePullSecrets:
         - name: redwoods
